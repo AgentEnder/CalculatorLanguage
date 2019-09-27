@@ -7,7 +7,11 @@ namespace CalculatorScanner
         static void Main(string[] args)
         {
             Scanner s = new Scanner(@"..\..\..\sample.calc");
-            s.GetTokens();
+            var tokens = s.GetTokens();
+            foreach (var token in tokens)
+            {
+                Console.WriteLine(token);
+            }
         }
     }
 }
