@@ -1,6 +1,5 @@
-﻿read A
-read B
-write (A+B)/.24 //X+Y
-write (1.02 + B) 
-sum = A+B
+read A1
+read A2
+sum:=(A1-33)+A2*5.5
 write sum
+write (A1+A2)/2

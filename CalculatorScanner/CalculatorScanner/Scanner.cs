@@ -22,6 +22,7 @@ namespace CalculatorScanner
             {
                 StreamReader reader = new StreamReader(f);
                 Queue<char> queue = new Queue<char>(reader.ReadToEnd());
+                queue.Enqueue(' '); //Prevent error when there is not whitespace at the EoF by adding a space.
                 while (queue.Count > 0)
                 {
                     char current; //Start of a new token
@@ -31,13 +32,14 @@ namespace CalculatorScanner
                         current = queue.Dequeue();
                     }
                     //Check if comment, otherwise report division.
-                    if (current == '/' ) 
+                    if (current == '/')
                     {
                         char next = queue.Peek();
                         if (next == '/')
                         {
-                            while (queue.Dequeue() != '\n'){ } //Do nothing,just getting rid of characters until end of line
-                        }else if (next == '*')
+                            while (queue.Dequeue() != '\n') { } //Do nothing,just getting rid of characters until end of line
+                        }
+                        else if (next == '*')
                         {
                             char prev = current;
                             current = queue.Dequeue();
@@ -52,7 +54,7 @@ namespace CalculatorScanner
                         }
                     }
                     //Check for valid numbers
-                    else if (".0123456789".Contains(current)) 
+                    else if (".0123456789".Contains(current))
                     {
                         string token = current.ToString();
                         char next = queue.Peek();
@@ -67,9 +69,11 @@ namespace CalculatorScanner
                                     acceptDecimalPoint = false; //One decimal point
                                 }
                                 queue.Dequeue(); //Handled character
-                            }else if("+-*/".Contains(next)) //Valid next token, handle that at later time.
+                            }
+                            else if ("+-*/)".Contains(next)) //Valid next token, handle that at later time.
                             {
                                 tokens.Add(token);
+                                break;
                             }
                             else
                             {
@@ -80,7 +84,7 @@ namespace CalculatorScanner
                         tokens.Add(token);
                     }
                     //Check for valid symbols and operators (division already handled)
-                    else if ((nonDivisionOperators+"()=").Contains(current))
+                    else if ((nonDivisionOperators + "()=").Contains(current))
                     {
                         if (current != ')') //Next can't be another operator
                         {
@@ -91,8 +95,9 @@ namespace CalculatorScanner
                             }
                         }
                         tokens.Add(current.ToString()); //Capture a token
-                    //Handle keywords and Id's
-                    } else if (char.IsLetter(current))
+                                                        //Handle keywords and Id's
+                    }
+                    else if (char.IsLetter(current))
                     {
                         string token = current.ToString();
                         char next = queue.Peek(); //Look at next character
@@ -107,6 +112,5 @@ namespace CalculatorScanner
             }
             return tokens;
         }
-
     }
 }
