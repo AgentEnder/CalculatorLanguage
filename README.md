@@ -1,2 +1,5 @@
-# TPLScanner_Proj1
-Scanner for calculator language, project 1 in theory of programming languages
+# Calculator Language
+Theory of Programming Languages programming assignments written in C#.
+
+* Scanner
+* Parser
