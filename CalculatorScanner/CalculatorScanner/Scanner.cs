@@ -15,7 +15,22 @@ namespace CalculatorScanner
             filePath = FilePath;
         }
 
-        public List<string> GetTokens()
+        public bool TryGetTokens(out List<string> token_out)
+        {
+            try
+            {
+                token_out = getTokens();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                token_out = null;
+                return false;
+            }
+        }
+
+        private List<string> getTokens()
         {
             List<string> tokens = new List<string>();
             using (FileStream f = new FileStream(filePath, FileMode.Open))
@@ -87,23 +102,9 @@ namespace CalculatorScanner
                             tokens.Add(token);
                     }
                     //Check for valid symbols and operators (division already handled)
-                    else if ((nonDivisionOperators + "():").Contains(current))
+                    else if ((nonDivisionOperators + "()").Contains(current))
                     {
-                        if (current == ':')
-                        {
-                            char next = queue.Peek();
-                            if (next == '=')
-                            {
-                                queue.Dequeue();
-                                tokens.Add(":=");
-                                continue;
-                            }
-                            else
-                            {
-                                throw new Exception(": only valid as :=");
-                            }
-                        }
-                        else if (current != ')') //Next can't be another operator
+                        if (current != ')') //Next can't be another operator
                         {
                             char next = queue.Peek(); //Check next character
                             if (nonDivisionOperators.Contains(next)) //Sequential operators not allowed
@@ -112,8 +113,22 @@ namespace CalculatorScanner
                             }
                         }
                         tokens.Add(current.ToString()); //Capture a token
-                                                        //Handle keywords and Id's
                     }
+                    else if (current == ':')
+                    {
+                        string token = current.ToString();
+                        char next = queue.Dequeue();
+                        if (next == '=')
+                        {
+                            token += next;
+                            tokens.Add(token);
+                        }
+                        else
+                        {
+                            throw new Exception(": must be followed by =");
+                        }
+                    }
+                    //Handle keywords and Id's
                     else if (char.IsLetter(current))
                     {
                         string token = current.ToString();
@@ -137,6 +152,10 @@ namespace CalculatorScanner
                         {
                             throw new Exception("Single $ not allowed in program!");
                         }
+                    }
+                    else
+                    {
+                        throw new Exception("Scanner encountered unexpected character!");
                     }
                 }
             }

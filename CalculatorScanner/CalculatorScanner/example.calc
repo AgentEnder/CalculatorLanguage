@@ -1,0 +1,6 @@
+﻿read A
+read B
+write (A+B)/.24 //X+Y
+write (1.02 + B) 
+sum = A+B
+write sum

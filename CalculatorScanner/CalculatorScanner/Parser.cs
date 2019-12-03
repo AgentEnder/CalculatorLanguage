@@ -40,16 +40,25 @@ namespace CalculatorScanner
         public bool Parse()
         {
             lookahead = tokens.Dequeue();
-            program();
-            if (lookahead == "$$")
+            try
             {
-                match("$$");
-                return true;
+                program();
+                if (lookahead == "$$")
+                {
+                    match("$$");
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
+            catch (Exception ex)
             {
+                Console.WriteLine($"{ex.Message}");
                 return false;
             }
+            
         }
 
         private bool match(string token)
@@ -69,8 +78,8 @@ namespace CalculatorScanner
             }
             else
             {
-                Console.WriteLine($"Expected {token}, recieved {lookahead}.");
-                return false;
+                throw new Exception($"Expected {token}, recieved {lookahead}.");
+                //Console.WriteLine($"Expected {token}, recieved {lookahead}.");
             }
         }
 
@@ -82,8 +91,8 @@ namespace CalculatorScanner
             }
             else
             {
-                Console.WriteLine($"Invalid ID: {token}");
-                return false;
+                //Console.WriteLine($"Invalid ID: {token}");
+                throw new Exception($"Invalid ID: {token}.");
             }
         }
 
