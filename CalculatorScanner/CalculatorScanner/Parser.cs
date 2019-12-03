@@ -79,20 +79,18 @@ namespace CalculatorScanner
             else
             {
                 throw new Exception($"Expected {token}, recieved {lookahead}.");
-                //Console.WriteLine($"Expected {token}, recieved {lookahead}.");
             }
         }
 
         private bool match_id(string token)
         {
-            if (!reservedWords.Contains(token) && Regex.Match(token, "(?:[A-Z]|[a-z]|-|_)*").Success)
+            if (!reservedWords.Contains(token) && Regex.Match(token, "(?:[A-Z]|[a-z]|-|_)+").Success)
             {
                 return match(token);
             }
             else
             {
-                //Console.WriteLine($"Invalid ID: {token}");
-                throw new Exception($"Invalid ID: {token}.");
+                throw new Exception($"Invalid ID: {token}");
             }
         }
 

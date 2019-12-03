@@ -24,7 +24,15 @@ namespace CalculatorScanner
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                switch (ex)
+                {
+                    case InvalidOperationException eq:
+                        Console.WriteLine("Unexpected End of File encountered!");
+                        break;
+                    default:
+                        Console.WriteLine(ex.Message);
+                        break;
+                }
                 token_out = null;
                 return false;
             }
@@ -60,7 +68,9 @@ namespace CalculatorScanner
                             current = queue.Dequeue();
                             while (prev != '*' || current != '/')
                             {
-                                queue.Dequeue(); //Remove characters between /* and */
+                                prev = current;
+                                current = queue.Dequeue();
+                                //queue.Dequeue(); //Remove characters between /* and */
                             }
                         }
                         else
@@ -107,9 +117,9 @@ namespace CalculatorScanner
                         if (current != ')') //Next can't be another operator
                         {
                             char next = queue.Peek(); //Check next character
-                            if (nonDivisionOperators.Contains(next)) //Sequential operators not allowed
+                            if ((nonDivisionOperators+'/').Contains(next)) //Sequential operators not allowed
                             {
-                                throw new Exception("Non separated operators");
+                                throw new Exception("Sequential Operators Not Allowed");
                             }
                         }
                         tokens.Add(current.ToString()); //Capture a token

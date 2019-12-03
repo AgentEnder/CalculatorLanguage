@@ -1,5 +1,5 @@
 read A
-read read B
+read B
 sum:=(A-B)*45.325
 write sum
 write sum*80.777-A
