@@ -19,7 +19,7 @@ namespace CalculatorScanner
         {
             try
             {
-                token_out = getTokens();
+                token_out = GetTokens();
                 return true;
             }
             catch (Exception ex)
@@ -27,10 +27,10 @@ namespace CalculatorScanner
                 switch (ex)
                 {
                     case InvalidOperationException eq:
-                        Console.WriteLine("Unexpected End of File encountered!");
+                        Console.Error.WriteLine("Unexpected End of File encountered!");
                         break;
                     default:
-                        Console.WriteLine(ex.Message);
+                        Console.Error.WriteLine(ex.Message);
                         break;
                 }
                 token_out = null;
@@ -38,7 +38,7 @@ namespace CalculatorScanner
             }
         }
 
-        private List<string> getTokens()
+        public List<string> GetTokens()
         {
             List<string> tokens = new List<string>();
             using (FileStream f = new FileStream(filePath, FileMode.Open))

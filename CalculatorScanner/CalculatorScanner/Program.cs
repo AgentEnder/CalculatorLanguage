@@ -20,7 +20,7 @@ namespace CalculatorScanner
             {
                 Console.WriteLine(token);
             }
-            Console.WriteLine("----------------------------\n");
+            Console.WriteLine("\n----------------------------\n");
             Console.WriteLine("Parsing Now: \n");
             Console.WriteLine("----------------------------\n");
             Parser p = new Parser(tokens);
