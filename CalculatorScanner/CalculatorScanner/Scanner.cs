@@ -58,6 +58,7 @@ namespace CalculatorScanner
                     {
                         string token = current.ToString();
                         char next = queue.Peek();
+                        bool add = true;
                         while (!char.IsWhiteSpace(next)) //Tokens end on whitespace
                         {
                             bool acceptDecimalPoint = current != '.'; //numbers can have ONE decimal point
@@ -73,6 +74,7 @@ namespace CalculatorScanner
                             else if ("+-*/)".Contains(next)) //Valid next token, handle that at later time.
                             {
                                 tokens.Add(token);
+                                add = false;
                                 break;
                             }
                             else
@@ -81,12 +83,27 @@ namespace CalculatorScanner
                             }
                             next = queue.Peek(); //Look at next char
                         }
-                        tokens.Add(token);
+                        if (add)
+                            tokens.Add(token);
                     }
                     //Check for valid symbols and operators (division already handled)
-                    else if ((nonDivisionOperators + "()=").Contains(current))
+                    else if ((nonDivisionOperators + "():").Contains(current))
                     {
-                        if (current != ')') //Next can't be another operator
+                        if (current == ':')
+                        {
+                            char next = queue.Peek();
+                            if (next == '=')
+                            {
+                                queue.Dequeue();
+                                tokens.Add(":=");
+                                continue;
+                            }
+                            else
+                            {
+                                throw new Exception(": only valid as :=");
+                            }
+                        }
+                        else if (current != ')') //Next can't be another operator
                         {
                             char next = queue.Peek(); //Check next character
                             if (nonDivisionOperators.Contains(next)) //Sequential operators not allowed
@@ -107,6 +124,19 @@ namespace CalculatorScanner
                             next = queue.Peek(); //Look at next
                         }
                         tokens.Add(token); ///Add to list
+                    }
+                    else if (current == '$')
+                    {
+                        var next = queue.Peek();
+                        if (next == '$')
+                        {
+                            tokens.Add("$$");
+                            return tokens; //Reached end of program
+                        }
+                        else
+                        {
+                            throw new Exception("Single $ not allowed in program!");
+                        }
                     }
                 }
             }
