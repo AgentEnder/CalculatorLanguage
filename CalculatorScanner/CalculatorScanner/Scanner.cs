@@ -119,7 +119,7 @@ namespace CalculatorScanner
                             char next = queue.Peek(); //Check next character
                             if ((nonDivisionOperators+'/').Contains(next)) //Sequential operators not allowed
                             {
-                                throw new Exception("Sequential Operators Not Allowed");
+                                throw new Exception($"Sequential Operators Not Allowed: {current}{next}");
                             }
                         }
                         tokens.Add(current.ToString()); //Capture a token
@@ -156,6 +156,15 @@ namespace CalculatorScanner
                         if (next == '$')
                         {
                             tokens.Add("$$");
+                            queue.Dequeue(); // Remove dangling $.
+                            while (queue.Count > 0)
+                            {
+                                var c = queue.Dequeue();
+                                if (!char.IsWhiteSpace(c))
+                                {
+                                    throw new Exception("Unexpected tokens after $$");
+                                }
+                            }
                             return tokens; //Reached end of program
                         }
                         else
@@ -165,7 +174,7 @@ namespace CalculatorScanner
                     }
                     else
                     {
-                        throw new Exception("Scanner encountered unexpected character!");
+                        throw new Exception($"Scanner encountered unexpected character: {current}");
                     }
                 }
             }
